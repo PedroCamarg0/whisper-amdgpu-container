@@ -1,0 +1,22 @@
+#!/bin/bash
+
+# run a whisper-amdgpu container to transcribe the .mp3 files
+
+# NOTE
+# you might need to adapt the --device options to your system
+# check ls -l /dev/dri/by-path/ and lspci to identify your card
+
+# you need to change path to the folder with the archives you want to transcribe
+
+  docker run --rm \
+  --device=/dev/kfd \
+  --device=/dev/dri \
+  --group-add=video \
+  -e HSA_OVERRIDE_GFX_VERSION=10.3.0 \
+  -v $PWD/files:/mnt \
+  -v "PATH/TO/YOUR/AUDIOS":/audios \
+  whisper-amdgpu:latest \
+  python3 -u /mnt/script.py 2>&1 | tee run.log
+  
+
+
